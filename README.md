@@ -42,7 +42,7 @@ A project on creating a custom printf function.
 	- You don’t have to handle precision
 	- You don’t have to handle the length modifiers
 7. Handle the following flag characters for non-custom conversion specifiers:
-	- +
+	- "+"
 	- space
 	- "#"
 8. Handle the following length modifiers for non-custom conversion specifiers:
