@@ -44,10 +44,10 @@ A project on creating a custom printf function.
 7. Handle the following flag characters for non-custom conversion specifiers:
 	- +
 	- space
-	- /#
+	- &#35
 8. Handle the following length modifiers for non-custom conversion specifiers:
 	- l
-	- h
+	- h  
 Conversion specifiers to handle: d, i, u, o, x, X
 9. Handle the field width for non-custom conversion specifiers.
 10. Handle the precision for non-custom conversion specifiers.
