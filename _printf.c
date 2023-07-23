@@ -11,8 +11,6 @@ int _printf(const char *format, ...)
 	int printed_chars = 0;
 	char c, *s;
 
-	if (format == 0)
-		return (-1);
 	va_start(args, format);
 	if (format)
 	{
