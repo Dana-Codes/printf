@@ -1,5 +1,4 @@
 #include "main.h"
-#include <stdarg.h>
 /**
  * _printf - Produces output according to a format
  * @format: Pointer to string containing what's to be printed
