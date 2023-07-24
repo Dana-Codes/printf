@@ -72,7 +72,66 @@ static int print_binary(unsigned int num)
 }
 
 /**
- * _printf - Custom printf function that handles conversion specifiers: c, s, %, d, i, and b
+ * print_octal - Helper function to print an unsigned integer in octal
+ */
+static int print_octal(unsigned int num)
+{
+    int printed_chars = 0;
+    if (num > 7)
+    {
+        printed_chars += print_octal(num / 8);
+    }
+    putchar('0' + (num % 8));
+    printed_chars++;
+    return (printed_chars);
+}
+
+/**
+ * print_hex - Helper function to print an unsigned integer in hexadecimal (lowercase)
+ */
+static int print_hex(unsigned int num)
+{
+    int printed_chars = 0;
+    if (num > 15)
+    {
+        printed_chars += print_hex(num / 16);
+    }
+    if ((num % 16) < 10)
+    {
+        putchar('0' + (num % 16));
+    }
+    else
+    {
+        putchar('a' + (num % 16) - 10);
+    }
+    printed_chars++;
+    return (printed_chars);
+}
+
+/**
+ * print_hex_upper - Helper function to print an unsigned integer in hexadecimal (uppercase)
+ */
+static int print_hex_upper(unsigned int num)
+{
+    int printed_chars = 0;
+    if (num > 15)
+    {
+        printed_chars += print_hex_upper(num / 16);
+    }
+    if ((num % 16) < 10)
+    {
+        putchar('0' + (num % 16));
+    }
+    else
+    {
+        putchar('A' + (num % 16) - 10);
+    }
+    printed_chars++;
+    return (printed_chars);
+}
+
+/**
+ * _printf - Custom printf function that handles conversion specifiers: c, s, %, d, i, u, o, x, and X
  *
  * @format: The format string
  * Return: Number of characters printed (excluding the null byte)
@@ -84,7 +143,10 @@ int _printf(const char *format, ...)
     char c;
     char *str;
     int d;
-    unsigned int b;
+    unsigned int u;
+    unsigned int o;
+    unsigned int x;
+    unsigned int X;
 
     va_start(args, format);
 
@@ -115,9 +177,24 @@ int _printf(const char *format, ...)
                 printed_chars += print_integer(d);
                 break;
 
-            case 'b':
-                b = va_arg(args, unsigned int);
-                printed_chars += print_binary(b);
+            case 'u':
+                u = va_arg(args, unsigned int);
+                printed_chars += print_integer(u);
+                break;
+
+            case 'o':
+                o = va_arg(args, unsigned int);
+                printed_chars += print_octal(o);
+                break;
+
+            case 'x':
+                x = va_arg(args, unsigned int);
+                printed_chars += print_hex(x);
+                break;
+
+            case 'X':
+                X = va_arg(args, unsigned int);
+                printed_chars += print_hex_upper(X);
                 break;
 
             default:
