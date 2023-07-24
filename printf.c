@@ -3,6 +3,30 @@
 #include "main.h"
 
 /**
+ * print_char - Helper function to print a single character
+ */
+static int print_char(char c)
+{
+	putchar(c);
+	return (1);
+}
+
+/**
+ * print_string - Helper function to print a string
+ */
+static int print_string(char *str)
+{
+	int printed_chars = 0;
+
+	while (*str != '\0')
+	{
+		putchar(*str);
+		printed_chars++;
+		str++;
+	}
+	return (printed_chars);
+}
+/**
  * _printf - Custom printf function that handles conversion specifiers: c, s, and %
  *
  * @format: The format string
@@ -26,43 +50,30 @@ int _printf(const char *format, ...)
 			{
 			case 'c':
 				c = (char)va_arg(args, int);
-				putchar(c);
-				printed_chars++;
+				printed_chars += print_char(c);
 				break;
 
 			case 's':
 				str = va_arg(args, char*);
-				while (*str != '\0')
-				{
-					putchar(*str);
-					printed_chars++;
-					str++;
-				}
+				printed_chars += print_string(str);
 				break;
 
 			case '%':
-				putchar('%');
-				printed_chars++;
+				printed_chars += print_char('%');
 				break;
 
 			default:
-				putchar('%');
-				putchar(*format);
-				printed_chars += 2;
+				printed_chars += print_char('%');
+				printed_chars += print_char(*format);
 				break;
 			}
 		}
 		else
 		{
-			putchar(*format);
-			printed_chars++;
+			printed_chars += print_char(*format);
 		}
-
 		format++;
 	}
-
 	va_end(args);
-
 	return (printed_chars);
 }
-
