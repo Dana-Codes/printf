@@ -1,139 +1,141 @@
 #include <stdio.h>
 #include <stdarg.h>
-#include <unistd.h>
 #include "main.h"
 
-#define BUFFER_SIZE 1024
-
 /**
- * _putchar - Helper function to print a single character
+ * print_char - Helper function to print a single character
  */
-static int _putchar(char c)
+static int print_char(char c)
 {
-    return write(1, &c, 1);
+    putchar(c);
+    return (1);
 }
 
 /**
- * _printf - Custom printf function
+ * print_string - Helper function to print a string
+ */
+static int print_string(char *str)
+{
+    int printed_chars = 0;
+    while (*str != '\0')
+    {
+        putchar(*str);
+        printed_chars++;
+        str++;
+    }
+    return (printed_chars);
+}
+
+/**
+ * print_integer - Helper function to print an integer
+ */
+static int print_integer(int num)
+{
+    unsigned int abs_num;
+    int printed_chars = 0;
+
+    if (num < 0)
+    {
+        putchar('-');
+        printed_chars++;
+        abs_num = -num;
+    }
+    else
+    {
+        abs_num = num;
+    }
+
+    if (abs_num > 9)
+    {
+        printed_chars += print_integer(abs_num / 10);
+    }
+
+    putchar('0' + (abs_num % 10));
+    printed_chars++;
+
+    return (printed_chars);
+}
+
+/**
+ * print_binary - Helper function to print an unsigned integer in binary
+ */
+static int print_binary(unsigned int num)
+{
+    int printed_chars = 0;
+    if (num > 1)
+    {
+        printed_chars += print_binary(num / 2);
+    }
+    putchar('0' + (num % 2));
+    printed_chars++;
+    return (printed_chars);
+}
+
+/**
+ * _printf - Custom printf function that handles conversion specifiers: c, s, %, d, i, and b
+ *
+ * @format: The format string
+ * Return: Number of characters printed (excluding the null byte)
  */
 int _printf(const char *format, ...)
 {
     va_list args;
-    char buffer[BUFFER_SIZE];
-    int i = 0, count = 0;
+    int printed_chars = 0;
+    char c;
+    char *str;
+    int d;
+    unsigned int b;
 
     va_start(args, format);
 
-    while (format && format[i])
+    while (*format != '\0')
     {
-        if (format[i] == '%')
+        if (*format == '%')
         {
-            i++;
-            if (format[i] == '\0')
-                return (-1);
-            if (format[i] == '%')
+            format++;
+            switch (*format)
             {
-                _putchar('%');
-                count++;
-            }
-            else if (format[i] == 'c')
-            {
-                char c = va_arg(args, int);
-                _putchar(c);
-                count++;
-            }
-            else if (format[i] == 's')
-            {
-                char *str = va_arg(args, char*);
-                int j = 0;
+            case 'c':
+                c = (char)va_arg(args, int);
+                printed_chars += print_char(c);
+                break;
 
-                while (str[j])
-                {
-                    if (count == BUFFER_SIZE)
-                    {
-                        write(1, buffer, BUFFER_SIZE);
-                        count = 0;
-                    }
-                    buffer[count++] = str[j++];
-                }
-            }
-            else if (format[i] == 'S')
-            {
-                char *str = va_arg(args, char*);
-                int j = 0;
+            case 's':
+                str = va_arg(args, char*);
+                printed_chars += print_string(str);
+                break;
 
-                while (str[j])
-                {
-                    if (str[j] < 32 || str[j] >= 127)
-                    {
-                        if (count >= BUFFER_SIZE - 4)
-                        {
-                            write(1, buffer, count);
-                            count = 0;
-                        }
-                        buffer[count++] = '\\';
-                        buffer[count++] = 'x';
-                        buffer[count++] = (str[j] / 16 < 10) ? (str[j] / 16 + '0') : (str[j] / 16 - 10 + 'A');
-                        buffer[count++] = (str[j] % 16 < 10) ? (str[j] % 16 + '0') : (str[j] % 16 - 10 + 'A');
-                    }
-                    else
-                    {
-                        if (count == BUFFER_SIZE)
-                        {
-                            write(1, buffer, BUFFER_SIZE);
-                            count = 0;
-                        }
-                        buffer[count++] = str[j];
-                    }
-                    j++;
-                }
-            }
-            else if (format[i] == 'd' || format[i] == 'i')
-            {
-                // Handle 'd' and 'i' conversion specifiers (integer)
-                // (Not included here for brevity)
-            }
-            else if (format[i] == 'u')
-            {
-                // Handle 'u' conversion specifier (unsigned integer)
-                // (Not included here for brevity)
-            }
-            else if (format[i] == 'o')
-            {
-                // Handle 'o' conversion specifier (octal)
-                // (Not included here for brevity)
-            }
-            else if (format[i] == 'x' || format[i] == 'X')
-            {
-                // Handle 'x' and 'X' conversion specifiers (hexadecimal)
-                // (Not included here for brevity)
-            }
-            else
-            {
-                _putchar('%');
-                _putchar(format[i]);
-                count += 2;
+            case '%':
+                printed_chars += print_char('%');
+                break;
+
+            case 'd':
+            case 'i':
+                d = va_arg(args, int);
+                printed_chars += print_integer(d);
+                break;
+
+            case 'b':
+                b = va_arg(args, unsigned int);
+                printed_chars += print_binary(b);
+                break;
+
+            default:
+                printed_chars += print_char('%');
+                printed_chars += print_char(*format);
+                break;
             }
         }
         else
         {
-            if (count == BUFFER_SIZE)
-            {
-                write(1, buffer, BUFFER_SIZE);
-                count = 0;
-            }
-            buffer[count++] = format[i];
+            printed_chars += print_char(*format);
         }
-        i++;
+
+        format++;
     }
 
     va_end(args);
 
-    if (count > 0)
-    {
-        write(1, buffer, count);
-    }
-
-    return count;
+    return (printed_chars);
 }
 
