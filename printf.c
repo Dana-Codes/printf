@@ -57,7 +57,22 @@ static int print_integer(int num)
 }
 
 /**
- * _printf - Custom printf function that handles conversion specifiers: c, s, %, d, and i
+ * print_binary - Helper function to print an unsigned integer in binary
+ */
+static int print_binary(unsigned int num)
+{
+    int printed_chars = 0;
+    if (num > 1)
+    {
+        printed_chars += print_binary(num / 2);
+    }
+    putchar('0' + (num % 2));
+    printed_chars++;
+    return (printed_chars);
+}
+
+/**
+ * _printf - Custom printf function that handles conversion specifiers: c, s, %, d, i, and b
  *
  * @format: The format string
  * Return: Number of characters printed (excluding the null byte)
@@ -69,6 +84,7 @@ int _printf(const char *format, ...)
     char c;
     char *str;
     int d;
+    unsigned int b;
 
     va_start(args, format);
 
@@ -97,6 +113,11 @@ int _printf(const char *format, ...)
             case 'i':
                 d = va_arg(args, int);
                 printed_chars += print_integer(d);
+                break;
+
+            case 'b':
+                b = va_arg(args, unsigned int);
+                printed_chars += print_binary(b);
                 break;
 
             default:
