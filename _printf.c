@@ -1,26 +1,28 @@
+#include "main.h"
 #include <stdio.h>
 #include <stdarg.h>
 
 int _printf(const char *format, ...) {
     va_list args;
+    int count; /* To keep track of the number of characters printed */
+    char ch;
+
     va_start(args, format);
 
-    int count = 0; // To keep track of the number of characters printed
-    char ch;
+    count = 0; // Initialize count
 
     while (*format) {
         if (*format == '%') {
-            format++; // Move to the character after '%'
+            format++; /* Move to the character after '%' */
 
-            // Check for valid conversion specifier
+            /* Check for valid conversion specifier */
             switch (*format) {
                 case 'c':
                     ch = va_arg(args, int);
                     putchar(ch);
                     count++;
                     break;
-                case 's':
-                {
+                case 's': {
                     char *str = va_arg(args, char *);
                     while (*str) {
                         putchar(*str);
@@ -44,16 +46,10 @@ int _printf(const char *format, ...) {
             count++;
         }
 
-        format++; // Move to the next character in the format string
+        format++; /* Move to the next character in the format string */
     }
 
     va_end(args);
     return count;
-}
-
-int main() {
-    int count = _printf("Hello, %s! This is %c test %% %s\n", "John", 'a', "printf");
-    printf("\nNumber of characters printed: %d\n", count);
-    return 0;
 }
 
