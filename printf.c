@@ -17,7 +17,6 @@ static int print_char(char c)
 static int print_string(char *str)
 {
 	int printed_chars = 0;
-
 	while (*str != '\0')
 	{
 		putchar(*str);
@@ -26,6 +25,7 @@ static int print_string(char *str)
 	}
 	return (printed_chars);
 }
+
 /**
  * _printf - Custom printf function that handles conversion specifiers: c, s, and %
  *
@@ -72,8 +72,12 @@ int _printf(const char *format, ...)
 		{
 			printed_chars += print_char(*format);
 		}
+
 		format++;
 	}
+
 	va_end(args);
+
 	return (printed_chars);
 }
+
