@@ -26,11 +26,16 @@ int _printf(const char *format, ...)
 					c = va_arg(args, int);
 					printed_chars += putchar(c);
 				}
-				else if (*fptr == 's')
+				else if (*fptr == 's' || *fptr == 'S')
 				{
 					s = va_arg(args, char *);
 					for (; *s != '\0'; s++)
-						printed_chars += putchar(*s);
+					{
+						if (*s >= 32 && *s < 127)
+							printed_chars += putchar(*s);
+						else
+							printed_chars += print_hexadecimal(*s);
+					}
 				}
 				else if (*fptr == '%')
 					printed_chars += putchar('%');
