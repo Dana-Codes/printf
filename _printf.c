@@ -8,7 +8,7 @@ int _printf(const char *format, ...)
 {
 	va_list args;
 	const char *fptr = format;
-	int printed_chars = 0, d;
+	int printed_chars = 0, d, plus = 0, space = 0, hash = 0;
 	char c, *s;
 	unsigned int u;
 	void *ptr;
@@ -21,7 +21,16 @@ int _printf(const char *format, ...)
 			if (*fptr == '%')
 			{
 				fptr++;
-
+				while (*fptr == '+' || *fptr == ' '|| *fptr == '#')
+				{
+					if (*fptr == '+')
+						plus = 1;
+					else if (*fptr == ' ')
+						space = 1;
+					else if (*fptr == '#')
+						hash = 1;
+					fptr++;
+				}
 				if (*fptr == 'c')
 				{
 					c = va_arg(args, int);
