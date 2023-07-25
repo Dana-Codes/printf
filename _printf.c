@@ -11,7 +11,7 @@ int _printf(const char *format, ...)
 	int printed_chars = 0, d;
 	char c, *s;
 	unsigned int u;
-	void *pptr;
+	void *ptr;
 
 	va_start(args, format);
 	if (format)
@@ -52,8 +52,8 @@ int _printf(const char *format, ...)
 				}
 				else if (*fptr == 'p')
 				{
-					pptr = va_arg(args, void *);
-					printed_chars += print_pointer(pptr);
+					ptr = va_arg(args, void *);
+					printed_chars += print_pointer(ptr);
 				}
 				else
 				{
