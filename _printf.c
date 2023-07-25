@@ -11,6 +11,7 @@ int _printf(const char *format, ...)
 	int printed_chars = 0, d;
 	char c, *s;
 	unsigned int u;
+	void *pptr;
 
 	va_start(args, format);
 	if (format)
@@ -48,6 +49,11 @@ int _printf(const char *format, ...)
 				{
 					u = va_arg(args, unsigned int);
 					printed_chars += print_binary(u);
+				}
+				else if (*fptr == 'p')
+				{
+					pptr = va_arg(args, void*);
+					printed_chars += print_hexadecimal(pptr);
 				}
 				else
 				{
