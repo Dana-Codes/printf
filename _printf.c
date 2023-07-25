@@ -52,8 +52,8 @@ int _printf(const char *format, ...)
 				}
 				else if (*fptr == 'p')
 				{
-					pptr = va_arg(args, void*);
-					printed_chars += print_hexadecimal(pptr);
+					pptr = va_arg(args, void *);
+					printed_chars += print_pointer(pptr);
 				}
 				else
 				{
