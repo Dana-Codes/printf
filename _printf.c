@@ -10,6 +10,7 @@ int _printf(const char *format, ...)
 	const char *fptr = format;
 	int printed_chars = 0, d;
 	char c, *s;
+	unsigned int u;
 
 	va_start(args, format);
 	if (format)
@@ -37,6 +38,11 @@ int _printf(const char *format, ...)
 				{
 					d = va_arg(args, int);
 					printed_chars += printf("%d", d);
+				}
+				else if (*fptr == 'b')
+				{
+					u = va_arg(args, unsigned int);
+					printed_chars += print_binary(u);
 				}
 				else
 				{
