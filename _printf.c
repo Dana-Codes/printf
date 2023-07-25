@@ -8,7 +8,7 @@ int _printf(const char *format, ...)
 {
 	va_list args;
 	const char *fptr = format;
-	int printed_chars = 0;
+	int printed_chars = 0, d;
 	char c, *s;
 
 	va_start(args, format);
@@ -32,14 +32,20 @@ int _printf(const char *format, ...)
 						printed_chars += putchar(*s);
 				}
 				else if (*fptr == '%')
+					printed_chars += putchar('%');
+				else if (*fptr == 'd' || *fptr == 'i')
+				{
+					d = va_arg(args, int);
+					printed_chars += printf("%d", d);
+				}
+				else
 				{
 					printed_chars += putchar('%');
+					printed_chars += putchar(*fptr);
 				}
 			}
 			else
-			{
 				printed_chars += putchar(*fptr);
-			}
 			fptr++;
 		}
 	}
