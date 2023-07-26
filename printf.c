@@ -1,78 +1,76 @@
 #include <stdio.h>
 #include <stdarg.h>
+#include <unistd.h>
 #include "main.h"
 
 /**
- * print_char - Helper function to print a single character
+ * _putchar - Helper function to print a single character
  */
-static int print_char(char c)
+static int _putchar(char c)
 {
-    putchar(c);
-    return (1);
+    return putchar(c);
 }
 
 /**
- * print_string - Helper function to print a string
+ * _print_string - Helper function to print a string
  */
-static int print_string(char *str)
+static int _print_string(char *str)
 {
-    int printed_chars = 0;
+    int len = 0;
     while (*str != '\0')
     {
-        putchar(*str);
-        printed_chars++;
+        _putchar(*str);
         str++;
+        len++;
     }
-    return (printed_chars);
+    return len;
 }
 
 /**
- * print_integer - Helper function to print an integer
+ * _print_number - Helper function to print a signed integer
  */
-static int print_integer(int num)
+static int _print_number(int num)
 {
-    unsigned int abs_num;
+    unsigned int n;
     int printed_chars = 0;
 
     if (num < 0)
     {
-        putchar('-');
-        printed_chars++;
-        abs_num = -num;
+        printed_chars += _putchar('-');
+        n = -num;
     }
     else
     {
-        abs_num = num;
+        n = num;
     }
 
-    if (abs_num > 9)
+    if (n > 9)
     {
-        printed_chars += print_integer(abs_num / 10);
+        printed_chars += _print_number(n / 10);
     }
 
-    putchar('0' + (abs_num % 10));
-    printed_chars++;
+    printed_chars += _putchar('0' + n % 10);
 
-    return (printed_chars);
+    return printed_chars;
 }
 
 /**
- * print_binary - Helper function to print an unsigned integer in binary
+ * _print_unsigned - Helper function to print an unsigned integer
  */
-static int print_binary(unsigned int num)
+static int _print_unsigned(unsigned int num, int base, const char *digits)
 {
     int printed_chars = 0;
-    if (num > 1)
+    if (num >= (unsigned int)base)
     {
-        printed_chars += print_binary(num / 2);
+        printed_chars += _print_unsigned(num / base, base, digits);
     }
-    putchar('0' + (num % 2));
+    _putchar(digits[num % base]);
     printed_chars++;
-    return (printed_chars);
+    return printed_chars;
 }
 
 /**
- * _printf - Custom printf function that handles conversion specifiers: c, s, %, d, i, and b
+ * _printf - Custom printf function that handles conversion specifiers: c, s, %, d, i, u, o, x, and X
  *
  * @format: The format string
  * Return: Number of characters printed (excluding the null byte)
@@ -84,7 +82,7 @@ int _printf(const char *format, ...)
     char c;
     char *str;
     int d;
-    unsigned int b;
+    unsigned int u;
 
     va_start(args, format);
 
@@ -95,40 +93,59 @@ int _printf(const char *format, ...)
             format++;
             switch (*format)
             {
-            case 'c':
-                c = (char)va_arg(args, int);
-                printed_chars += print_char(c);
-                break;
+                case 'c':
+                    c = va_arg(args, int);
+                    printed_chars += _putchar(c);
+                    break;
 
-            case 's':
-                str = va_arg(args, char*);
-                printed_chars += print_string(str);
-                break;
+                case 's':
+                    str = va_arg(args, char *);
+                    if (str == NULL)
+                    {
+                        str = "(null)";
+                    }
+                    printed_chars += _print_string(str);
+                    break;
 
-            case '%':
-                printed_chars += print_char('%');
-                break;
+                case '%':
+                    printed_chars += _putchar('%');
+                    break;
 
-            case 'd':
-            case 'i':
-                d = va_arg(args, int);
-                printed_chars += print_integer(d);
-                break;
+                case 'd':
+                case 'i':
+                    d = va_arg(args, int);
+                    printed_chars += _print_number(d);
+                    break;
 
-            case 'b':
-                b = va_arg(args, unsigned int);
-                printed_chars += print_binary(b);
-                break;
+                case 'u':
+                    u = va_arg(args, unsigned int);
+                    printed_chars += _print_unsigned(u, 10, "0123456789");
+                    break;
 
-            default:
-                printed_chars += print_char('%');
-                printed_chars += print_char(*format);
-                break;
+                case 'o':
+                    u = va_arg(args, unsigned int);
+                    printed_chars += _print_unsigned(u, 8, "01234567");
+                    break;
+
+                case 'x':
+                    u = va_arg(args, unsigned int);
+                    printed_chars += _print_unsigned(u, 16, "0123456789abcdef");
+                    break;
+
+                case 'X':
+                    u = va_arg(args, unsigned int);
+                    printed_chars += _print_unsigned(u, 16, "0123456789ABCDEF");
+                    break;
+
+                default:
+                    printed_chars += _putchar('%');
+                    printed_chars += _putchar(*format);
+                    break;
             }
         }
         else
         {
-            printed_chars += print_char(*format);
+            printed_chars += _putchar(*format);
         }
 
         format++;
@@ -136,6 +153,6 @@ int _printf(const char *format, ...)
 
     va_end(args);
 
-    return (printed_chars);
+    return printed_chars;
 }
 
