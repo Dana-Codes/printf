@@ -5,8 +5,7 @@
  * @ptr: Pointer
  * Return: Characters printed
  */
-
-int print_pointer(void *ptr)
+void print_pointer(void *ptr);
 {
 	unsigned long p = (unsigned long)ptr;
 	int digit_count, printed_chars = 0, i, H_digit;
@@ -24,6 +23,4 @@ int print_pointer(void *ptr)
 		putchar(H_char);
 		printed_chars++;
 	}
-
-	return (printed_chars);
 }
